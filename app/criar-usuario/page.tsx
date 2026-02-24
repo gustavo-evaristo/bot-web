@@ -15,7 +15,6 @@ import { useMutation } from "@tanstack/react-query";
 import { registerProfile } from "@/api/auth"
 import { twMerge } from "tailwind-merge"
 
-
 const inputClassName =
   "h-12 rounded-xl bg-secondary border-transparent px-4 text-sm placeholder:text-muted-foreground focus-visible:border-primary focus-visible:ring-primary/20"
 
@@ -24,13 +23,12 @@ export default function CriarUsuarioPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const router = useRouter()
 
-
   const {
     mutate,
     isPending,
   } = useMutation({
     mutationFn: registerProfile,
-    onSuccess: (response) => {
+    onSuccess: () => {
       router.push("/dashboard");
     },
     onError: (error) => {
@@ -128,6 +126,7 @@ export default function CriarUsuarioPage() {
               <label htmlFor="password" className="text-sm font-medium text-foreground">
                 Senha
               </label>
+
               <div className="relative">
                 <Input
                   id="password"
@@ -149,6 +148,7 @@ export default function CriarUsuarioPage() {
                   {showPassword ? <Eye className="size-5" /> : <EyeOff className="size-5" />}
                 </button>
               </div>
+
               {errors.password?.message && (
                 <p className="text-red-500">{errors.password.message}</p>
               )}

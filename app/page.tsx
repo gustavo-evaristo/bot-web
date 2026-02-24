@@ -7,17 +7,80 @@ import { Eye, EyeOff } from "lucide-react"
 import { Logo } from "@/components/botweb-logo"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { zodResolver } from "@hookform/resolvers/zod"
+import z from "zod"
+import { useForm } from "react-hook-form"
+import { useMutation } from "@tanstack/react-query"
+import { UserLoginDTO } from "@/dto/user.dto"
+import { loginProfile } from "@/api/auth"
+import { twMerge } from "tailwind-merge"
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+
+
+  const LoginSchema = z
+    .object({
+      email: z.string().email("Digite um email válido"),
+      password: z
+        .string()
+        .nonempty("Este campo é obrigatório")
+        .min(8, "A senha deve ter no mínimo 8 dígitos")
+        .regex(
+          /[!@#$%^&*(),.?":{}|<>]/,
+          "A senha deve conter pelo menos um caractere especial"
+        )
+    })
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<z.infer<typeof LoginSchema>>({
+    resolver: zodResolver(LoginSchema),
+  });
+
   const router = useRouter()
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    router.push("/dashboard")
-  }
+  const inputClassName =
+    "h-12 rounded-xl bg-secondary border-transparent px-4 pr-12 text-sm placeholder:text-muted-foreground focus-visible:border-primary focus-visible:ring-primary/20"
+
+  const emailValue = watch("email");
+
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue || "");
+
+  const {
+    mutate: mutationLoginProfile,
+    isPending: isLoadingLoginProfile,
+  } = useMutation({
+    mutationKey: ["profile"],
+    mutationFn: (data: UserLoginDTO) => loginProfile(data),
+    onSuccess: (response) => {
+      // saveUser(response.user, response.accessToken);
+
+      router.push("/dashboard");
+    },
+    onError: (error) => {
+      console.error(error);
+
+      // const errorMessage = (error as any)?.response?.data?.message;
+
+      // if (errorMessage !== "Invalid credentials") {
+      //   toast({
+      //     title: "Erro ao fazer login",
+      //     description: "Tente novamente mais tarde!",
+      //     variant: "destructive",
+      //   });
+      // }
+    },
+  });
+
+
+
+  function handleLogin(data: UserLoginDTO) {
+    mutationLoginProfile(data);
+  };
 
   return (
     <div className="flex min-h-screen">
@@ -28,7 +91,7 @@ export default function LoginPage() {
             <Logo size="lg" />
           </div>
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          <form onSubmit={handleSubmit(handleLogin)} className="flex flex-col gap-6">
             <div className="flex flex-col gap-2">
               <label htmlFor="email" className="text-sm font-medium text-foreground">
                 E-mail
@@ -37,9 +100,10 @@ export default function LoginPage() {
                 id="email"
                 type="email"
                 placeholder="Digite seu e-mail"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="h-12 rounded-xl bg-secondary border-transparent px-4 text-sm placeholder:text-muted-foreground focus-visible:border-primary focus-visible:ring-primary/20"
+                {...register("email")}
+                error={errors.email?.message}
+                isValid={isEmailValid}
+                className={inputClassName}
               />
             </div>
 
@@ -48,36 +112,45 @@ export default function LoginPage() {
                 <label htmlFor="password" className="text-sm font-medium text-foreground">
                   Senha
                 </label>
-                <button
+                {/* <button
                   type="button"
                   className="text-sm font-medium text-primary hover:underline"
                 >
                   Esqueceu a Senha?
-                </button>
+                </button> */}
               </div>
+
               <div className="relative">
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Digite sua senha"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="h-12 rounded-xl bg-secondary border-transparent px-4 pr-12 text-sm placeholder:text-muted-foreground focus-visible:border-primary focus-visible:ring-primary/20"
+                  {...register("password")}
+                  className={twMerge(
+                    `${inputClassName} pr-12`,
+                    errors.password && "border-red-500",
+                  )}
+                  aria-invalid={!!errors.password}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  className="absolute cursor-pointer right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                   aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
                 >
                   {showPassword ? <Eye className="size-5" /> : <EyeOff className="size-5" />}
                 </button>
               </div>
+
+              {errors.password?.message && (
+                <p className="text-red-500">{errors.password.message}</p>
+              )}
             </div>
 
             <Button
               type="submit"
               className="h-12 rounded-xl text-sm font-semibold uppercase tracking-wider"
+              isLoading={isLoadingLoginProfile}
             >
               Acessar
             </Button>

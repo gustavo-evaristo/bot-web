@@ -5,7 +5,7 @@ export async function loginProfile({
   email,
   password,
 }: UserLoginDTO): Promise<UserDTO> {
-  const { data } = await api.post("/auth/login", {
+  const { data } = await api.post("/login", {
     email,
     password,
   });
