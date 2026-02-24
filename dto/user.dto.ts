@@ -1,11 +1,11 @@
 
 export interface UserDTO {
-  id: string
-  name: string
-  phone: string
-  email: string
-  createdAt: string
-  updatedAt: string
+  id: string,
+  isActive?: boolean,
+  name: string,
+  email: string,
+  phone: string,
+  createdAt?: string,
 }
 
 export interface UserLoginDTO {
@@ -18,10 +18,21 @@ export interface UserRegisterDTO {
   email: string
   phone: string
   password: string
-  confirmPassword:string
+  confirmPassword: string
+}
+
+export interface UserLoginResponseDTO {
+  email: string
+  id: string
+  name: string
+  phone: string
+  token: string
 }
 
 export interface UserRegisterResponseDTO {
-  user: UserDTO,
-  accessToken: string
+  id: string
+  name: string
+  phone: string
+  email: string
+  token: string
 }

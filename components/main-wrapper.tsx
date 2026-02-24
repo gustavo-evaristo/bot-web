@@ -10,7 +10,7 @@ export function MainWrapper({ children }: { children: React.ReactNode }) {
   return (
     <main
       className={twMerge(
-        !isAuthPage && "p-6 lg:p-8"
+        !isAuthPage && "p-6 lg:p-8 mt-16"
       )}
     >
       {children}

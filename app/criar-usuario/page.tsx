@@ -14,6 +14,7 @@ import { z } from "zod"
 import { useMutation } from "@tanstack/react-query";
 import { registerProfile } from "@/api/auth"
 import { twMerge } from "tailwind-merge"
+import { useUser } from "@/hooks/useUser"
 
 const inputClassName =
   "h-12 rounded-xl bg-secondary border-transparent px-4 text-sm placeholder:text-muted-foreground focus-visible:border-primary focus-visible:ring-primary/20"
@@ -23,12 +24,21 @@ export default function CriarUsuarioPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const router = useRouter()
 
+  const { saveUser } = useUser()
+
   const {
     mutate,
     isPending,
   } = useMutation({
     mutationFn: registerProfile,
-    onSuccess: () => {
+    onSuccess: (response) => {
+      saveUser({
+        id: response.id,
+        name: response.name,
+        phone: response.phone,
+        email: response.email,
+      }, response.token);
+
       router.push("/dashboard");
     },
     onError: (error) => {

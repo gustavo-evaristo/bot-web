@@ -1,10 +1,10 @@
-import { UserDTO, UserLoginDTO, UserRegisterDTO, UserRegisterResponseDTO } from "@/dto/user.dto";
+import { UserLoginDTO, UserLoginResponseDTO, UserRegisterDTO, UserRegisterResponseDTO } from "@/dto/user.dto";
 import api from "@/service/axios";
 
 export async function loginProfile({
   email,
   password,
-}: UserLoginDTO): Promise<UserDTO> {
+}: UserLoginDTO): Promise<UserLoginResponseDTO> {
   const { data } = await api.post("/login", {
     email,
     password,

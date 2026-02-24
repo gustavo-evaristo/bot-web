@@ -7,12 +7,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { LeadsChart } from "@/components/leads-chart"
 import { TokensChart } from "@/components/tokens-chart"
 import { TokensUsageChart } from "@/components/tokens-usage-chart"
-import { useGetAllUsers } from "@/hooks/useGetAllUsers"
+// import { useGetAllUsers } from "@/hooks/useGetAllUsers"
 
 export default function DashboardPage() {
 
-  const {data} = useGetAllUsers()
-  console.log("user:",data)
+  // const {data} = useGetAllUsers()
 
   return (
     <div className="flex flex-col gap-6">

@@ -14,10 +14,12 @@ import { useMutation } from "@tanstack/react-query"
 import { UserLoginDTO } from "@/dto/user.dto"
 import { loginProfile } from "@/api/auth"
 import { twMerge } from "tailwind-merge"
+import { useUser } from "@/hooks/useUser"
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
 
+  const { saveUser } = useUser()
 
   const LoginSchema = z
     .object({
@@ -57,7 +59,12 @@ export default function LoginPage() {
     mutationKey: ["profile"],
     mutationFn: (data: UserLoginDTO) => loginProfile(data),
     onSuccess: (response) => {
-      // saveUser(response.user, response.accessToken);
+      saveUser({
+        id: response.id,
+        name: response.name,
+        phone: response.phone,
+        email: response.email,
+      }, response.token);
 
       router.push("/dashboard");
     },

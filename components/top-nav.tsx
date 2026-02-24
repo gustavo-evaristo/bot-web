@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import {
   LayoutDashboard,
   Columns3,
@@ -14,6 +14,13 @@ import {
 import { Logo } from "@/components/botweb-logo"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
+import { useUser } from "@/hooks/useUser"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -26,11 +33,28 @@ const navItems = [
 
 export function TopNav() {
   const pathname = usePathname()
+  const router = useRouter()
   const isAuthPage = pathname === "/" || pathname === "/criar-usuario"
   if (isAuthPage) return null
 
+  const { user, clearUser } = useUser()
+
+  const userInitials = (() => {
+    if (!user?.name) return ""
+    const parts = user.name.trim().split(/\s+/)
+    if (parts.length === 1) {
+      return parts[0].slice(0, 2).toUpperCase()
+    }
+    return `${parts[0][0]}${parts[1][0]}`.toUpperCase()
+  })()
+
+  function handleSignOut() {
+    router.push("/")
+    clearUser()
+  }
+
   return (
-    <header className="sticky top-0 z-50 flex h-16 items-center border-b border-border bg-card px-6">
+    <header className="fixed top-0 left-0 right-0 z-50 flex h-16 items-center border-b border-border bg-card px-6">
       <Link href="/dashboard" className="mr-8">
         <Logo size="sm" />
       </Link>
@@ -60,24 +84,33 @@ export function TopNav() {
       </nav>
 
       <div className="ml-auto flex items-center gap-4">
-        <button className="relative text-muted-foreground hover:text-foreground transition-colors">
+        <button className="relative text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
           <Bell className="size-5" />
           <span className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-primary-foreground">
             2
           </span>
         </button>
 
-        <div className="flex items-center gap-2 cursor-pointer">
-          <Avatar className="size-8">
-            <AvatarFallback className="bg-primary text-primary-foreground text-xs font-semibold">
-              GF
-            </AvatarFallback>
-          </Avatar>
-          <span className="hidden lg:inline text-sm font-medium text-foreground">
-            Gustavo Frota
-          </span>
-          <ChevronDown className="size-4 text-muted-foreground" />
-        </div>
+        <DropdownMenu modal={false}>
+          <DropdownMenuTrigger asChild>
+            <button className="flex items-center gap-2 cursor-pointer">
+              <Avatar className="size-8">
+                <AvatarFallback className="bg-primary text-primary-foreground text-xs font-semibold">
+                  {userInitials}
+                </AvatarFallback>
+              </Avatar>
+              <span className="hidden capitalize lg:inline text-sm font-medium text-foreground">
+                {user?.name}
+              </span>
+              <ChevronDown className="size-4 text-muted-foreground" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={handleSignOut} variant="destructive">
+              Sair
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   )
