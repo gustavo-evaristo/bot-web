@@ -1,9 +1,10 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Eye, EyeOff } from "lucide-react"
-import { Logo } from "@/components/kanbot-logo"
+import { Logo } from "@/components/botweb-logo"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
@@ -84,10 +85,10 @@ export default function LoginPage() {
 
           <div className="mt-8 border-t border-border pt-6 text-center">
             <p className="text-sm text-muted-foreground">
-              {"Nao tem conta? "}
-              <button className="font-medium text-primary hover:underline">
+              Não tem conta?{" "}
+              <Link href="/criar-usuario" className="font-medium text-primary hover:underline">
                 Registre-se
-              </button>
+              </Link>
             </p>
           </div>
         </div>

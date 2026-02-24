@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import { TopNav } from '@/components/top-nav'
+import { MainWrapper } from '@/components/main-wrapper'
+import { Providers } from './providers'
 
 export const metadata: Metadata = {
   title: 'botweb - Plataforma de Automacao',
@@ -38,9 +40,11 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className="font-sans antialiased">
-        <TopNav />
-        <main className="p-6 lg:p-8">{children}</main>
-        <Analytics />
+        <Providers>
+          <TopNav />
+          <MainWrapper>{children}</MainWrapper>
+          <Analytics />
+        </Providers>
       </body>
     </html>
   )

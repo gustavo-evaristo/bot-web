@@ -11,7 +11,7 @@ import {
   ChevronDown,
   UserCircle,
 } from "lucide-react"
-import { Logo } from "@/components/kanbot-logo"
+import { Logo } from "@/components/botweb-logo"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
 
@@ -26,6 +26,8 @@ const navItems = [
 
 export function TopNav() {
   const pathname = usePathname()
+  const isAuthPage = pathname === "/" || pathname === "/criar-usuario"
+  if (isAuthPage) return null
 
   return (
     <header className="sticky top-0 z-50 flex h-16 items-center border-b border-border bg-card px-6">
