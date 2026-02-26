@@ -4,7 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Eye, EyeOff } from "lucide-react"
-import { Logo } from "@/components/botweb-logo"
+import { BotwebLogo } from "@/components/botweb-logo"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -95,7 +95,7 @@ export default function LoginPage() {
       <div className="flex w-full flex-col justify-center bg-card px-8 lg:w-1/2 lg:px-24">
         <div className="mx-auto w-full max-w-md">
           <div className="mb-12">
-            <Logo size="lg" />
+            <BotwebLogo size="lg" />
           </div>
 
           <form onSubmit={handleSubmit(handleLogin)} className="flex flex-col gap-6">

@@ -11,7 +11,7 @@ import {
   ChevronDown,
   UserCircle,
 } from "lucide-react"
-import { Logo } from "@/components/botweb-logo"
+import { BotwebLogo } from "@/components/botweb-logo"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
 import { useUser } from "@/hooks/useUser"
@@ -56,7 +56,7 @@ export function TopNav() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 flex h-16 items-center border-b border-border bg-card px-6">
       <Link href="/dashboard" className="mr-8">
-        <Logo size="sm" />
+        <BotwebLogo size="sm" />
       </Link>
 
       <nav className="hidden md:flex items-center gap-1">

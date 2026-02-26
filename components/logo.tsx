@@ -1,4 +1,4 @@
-export function BotwebLogo({ size = "default" }: { size?: "sm" | "default" | "lg" }) {
+export function Logo({ size = "default" }: { size?: "sm" | "default" | "lg" }) {
   const dimensions = {
     sm: { icon: 28, text: "text-base" },
     default: { icon: 34, text: "text-lg" },
@@ -15,10 +15,6 @@ export function BotwebLogo({ size = "default" }: { size?: "sm" | "default" | "lg
       >
         {'B'}
       </div>
-      <span className={`${d.text} font-semibold tracking-tight text-foreground`}>
-        {'bot'}
-        <span className="text-primary">{'web'}</span>
-      </span>
     </div>
   )
 }
